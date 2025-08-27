@@ -1,0 +1,92 @@
+module FormatUtils {
+  @ "Pure utility functions for formatting data display"
+  @ "No side effects, deterministic outputs"
+
+  type: "utility"
+  
+  location: "src/utils/format.ts"
+  
+  interface {
+    @ "Date formatting functions"
+    public formatDate(dateString: string) -> string
+    public formatRelativeTime(dateString: string) -> string
+    
+    @ "File size formatting"
+    public formatFileSize(bytes: number) -> string
+    
+    @ "Text formatting"
+    public truncateText(text: string, maxLength: number) -> string
+    public formatLanguage(language: string?) -> string
+    
+    @ "URL formatting"
+    public formatGistUrl(gist: Gist) -> string
+    public formatFileUrl(file: GistFile) -> string
+    
+    @ "Helper constants"
+    public readonly DATE_FORMATS: {
+      short: string,
+      long: string,
+      relative: string
+    }
+  }
+  
+  state {
+    @ "Module-level constants"
+    private readonly DATE_FORMAT_CONFIG = {
+      short: "MMM d, yyyy",
+      long: "MMMM d, yyyy 'at' h:mm a",
+      relative: true
+    }
+    private readonly FILE_SIZE_UNITS = ["B", "KB", "MB", "GB"]
+  }
+  
+  imports {
+    @ "Types only"
+    allow "../types/gist.types" as types
+    
+    @ "Date formatting library"
+    allow "date-fns" as external
+    
+    @ "No framework imports"
+    deny imports ["react", "vue", "@angular/*"]
+    
+    @ "No side-effect imports"
+    deny imports ["../stores/*", "../services/*", "../data/*"]
+    
+    @ "No component imports"
+    deny imports ["../components/*"]
+  }
+  
+  constraints {
+    @ "Pure functions only"
+    deny io.*  @ "No I/O operations"
+    deny pattern.side_effects
+    deny pattern.mutations
+    
+    @ "No async operations"
+    deny pattern.async
+    deny pattern.promises
+    
+    @ "Deterministic behavior"
+    require pattern.deterministic
+    deny pattern.random_without_seed
+    deny pattern.date_now @ "Use passed timestamps"
+    
+    @ "Error handling"
+    require pattern.defensive @ "Validate inputs"
+    
+    @ "Documentation"
+    require pattern.jsdoc @ "Document complex functions"
+    
+    @ "Testing"
+    require pattern.unit_testable
+    
+    @ "Export all public functions"
+    require exports ["format*", "DATE_FORMATS"]
+    
+    @ "Size constraints"
+    warn file.lines > 150
+    deny file.lines > 200
+    warn function.lines > 20
+  }
+}

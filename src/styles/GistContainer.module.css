@@ -1,0 +1,173 @@
+/**
+ * Styles for GistContainer component
+ */
+
+.container {
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+  background-color: var(--color-bg-secondary);
+}
+
+.header {
+  max-width: 1200px;
+  margin: 0 auto var(--spacing-xl);
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+  line-height: var(--line-height-tight);
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.viewToggle {
+  display: flex;
+  gap: var(--spacing-xs);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-xs);
+  background-color: var(--color-bg-primary);
+}
+
+.viewButton {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+}
+
+.viewButton:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-muted);
+}
+
+.viewButton.active {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  gap: var(--spacing-xl);
+}
+
+.twoColumn {
+  grid-template-columns: 1fr 1fr;
+}
+
+.oneColumn {
+  grid-template-columns: 1fr;
+}
+
+.listSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.detailSection {
+  position: sticky;
+  top: var(--spacing-lg);
+  height: fit-content;
+}
+
+.errorBanner {
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+  background-color: rgba(220, 38, 38, 0.1);
+  color: var(--color-error);
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.errorMessage {
+  flex: 1;
+}
+
+.dismissButton {
+  padding: var(--spacing-xs);
+  border: none;
+  background: none;
+  color: var(--color-error);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
+}
+
+.dismissButton:hover {
+  background-color: rgba(220, 38, 38, 0.1);
+}
+
+.loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-bg-overlay);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: var(--z-modal);
+}
+
+.loadingSpinner {
+  padding: var(--spacing-xl);
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  color: var(--color-text-primary);
+}
+
+/* Mobile optimization */
+@media (max-width: 1024px) {
+  .twoColumn {
+    grid-template-columns: 1fr;
+  }
+  
+  .detailSection {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+  
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .viewToggle {
+    justify-content: center;
+  }
+}

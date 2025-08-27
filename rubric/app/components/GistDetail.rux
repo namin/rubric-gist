@@ -1,0 +1,72 @@
+module GistDetail {
+  @ "Pure presentation component for displaying detailed gist view"
+  @ "Props-only, no stores or external state"
+
+  type: "presentation"
+  
+  location: "src/components/GistDetail.tsx"
+  
+  interface {
+    @ "Props interface"
+    public GistDetail(props: {
+      gist: Gist?,
+      onClose?: () -> void,
+      onFileSelect?: (filename: string) -> void,
+      selectedFile?: string,
+      isLoading?: boolean,
+      className?: string
+    }) -> JSX.Element
+  }
+  
+  state {
+    @ "Minimal local state for UI interactions only"
+    private selectedTab: string
+    private isCodeExpanded: boolean
+  }
+  
+  imports {
+    @ "React only"
+    allow "react" as external
+    
+    @ "UI libraries"
+    allow "@mui/material" as external
+    allow "lucide-react" as external
+    allow "clsx" as external
+    
+    @ "Code highlighting"
+    allow "prism-react-renderer" as external
+    
+    @ "Type imports only"
+    allow "../types/gist.types" as types
+    
+    @ "UI-specific utilities only"
+    allow "../utils/format" as {formatDate, formatFileSize}
+    
+    @ "CSS modules for styling"
+    allow "../styles/GistDetail.module.css" as styles
+    
+    @ "No stores, services, or data access"
+    deny imports ["../stores/*", "../services/*", "../data/*", "../hooks/*"]
+  }
+  
+  constraints {
+    @ "No side effects"
+    deny io.*
+    
+    @ "No async operations"
+    deny pattern.async_operations
+    
+    @ "Props validation"
+    require pattern.prop_types_or_typescript
+    
+    @ "Export restrictions"
+    deny exports ["_*"]
+    
+    @ "Keep it simple"
+    warn file.lines > 200
+    deny file.lines > 250
+    
+    @ "Performance"
+    require pattern.memo_if_expensive
+  }
+}

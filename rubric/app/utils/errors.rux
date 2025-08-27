@@ -1,0 +1,89 @@
+module ErrorUtils {
+  @ "Pure utility functions for error handling and formatting"
+  @ "No side effects, deterministic outputs"
+
+  type: "utility"
+  
+  location: "src/utils/errors.ts"
+  
+  interface {
+    @ "Error formatting functions"
+    public formatError(error: unknown) -> string
+    public isNetworkError(error: unknown) -> boolean
+    public isApiError(error: unknown) -> boolean
+    
+    @ "Error classes"
+    public class AppError extends Error {
+      code: string,
+      details?: any
+    }
+    
+    @ "Error codes"
+    public readonly ErrorCode: {
+      NETWORK_ERROR: string,
+      API_ERROR: string,
+      VALIDATION_ERROR: string,
+      NOT_FOUND: string,
+      RATE_LIMITED: string
+    }
+    
+    @ "Error transformation"
+    public transformApiError(apiError: any) -> AppError
+    public createUserFriendlyMessage(error: AppError) -> string
+  }
+  
+  state {
+    @ "Module-level constants"
+    private readonly ERROR_MESSAGES = {
+      NETWORK_ERROR: "Network connection failed",
+      API_ERROR: "Service temporarily unavailable",
+      VALIDATION_ERROR: "Invalid input provided",
+      NOT_FOUND: "Resource not found",
+      RATE_LIMITED: "Too many requests, please try again later"
+    }
+  }
+  
+  imports {
+    @ "No external dependencies needed"
+    
+    @ "No framework imports"
+    deny imports ["react", "vue", "@angular/*"]
+    
+    @ "No side-effect imports"
+    deny imports ["../stores/*", "../services/*", "../data/*"]
+    
+    @ "No component imports"
+    deny imports ["../components/*"]
+  }
+  
+  constraints {
+    @ "Pure functions only"
+    deny io.*  @ "No I/O operations"
+    deny pattern.side_effects
+    deny pattern.mutations
+    
+    @ "No async operations"
+    deny pattern.async
+    deny pattern.promises
+    
+    @ "Deterministic behavior"
+    require pattern.deterministic
+    
+    @ "Error handling"
+    require pattern.defensive @ "Validate inputs"
+    
+    @ "Documentation"
+    require pattern.jsdoc @ "Document complex functions"
+    
+    @ "Testing"
+    require pattern.unit_testable
+    
+    @ "Export all public functions and classes"
+    require exports ["formatError", "isNetworkError", "isApiError", "AppError", "ErrorCode", "transformApiError", "createUserFriendlyMessage"]
+    
+    @ "Size constraints"
+    warn file.lines > 100
+    deny file.lines > 150
+    warn function.lines > 15
+  }
+}

@@ -1,0 +1,71 @@
+module GistTypes {
+  @ "TypeScript types and interfaces for GitHub Gist data"
+  @ "Shared across all layers for type safety"
+
+  type: "utility"
+  
+  location: "src/types/gist.types.ts"
+  
+  interface {
+    @ "GitHub Gist data structure"
+    public type Gist = {
+      id: string,
+      url: string,
+      html_url: string,
+      description: string?,
+      public: boolean,
+      created_at: string,
+      updated_at: string,
+      files: Record<string, GistFile>,
+      owner: GistOwner
+    }
+    
+    @ "Individual file within a gist"
+    public type GistFile = {
+      filename: string,
+      type: string,
+      language: string?,
+      raw_url: string,
+      size: number,
+      content?: string
+    }
+    
+    @ "Gist owner information"
+    public type GistOwner = {
+      login: string,
+      id: number,
+      avatar_url: string,
+      html_url: string
+    }
+    
+    @ "Search filters for gists"
+    public type GistFilters = {
+      username?: string,
+      since?: string,
+      per_page?: number,
+      page?: number
+    }
+    
+    @ "API response types"
+    public type GistListResponse = Gist[]
+    public type GistDetailResponse = Gist
+  }
+  
+  state {
+    @ "No runtime state in type files"
+  }
+  
+  imports {
+    @ "No imports needed for type-only file"
+  }
+  
+  constraints {
+    @ "Types only - no runtime code"
+    deny pattern.runtime_code
+    deny io.*
+    deny pattern.side_effects
+    
+    @ "Export all types"
+    require exports ["Gist", "GistFile", "GistOwner", "GistFilters", "GistListResponse", "GistDetailResponse"]
+  }
+}

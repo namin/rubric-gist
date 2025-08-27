@@ -1,0 +1,68 @@
+module GistList {
+  @ "Pure presentation component for displaying list of gists"
+  @ "Props-only, no stores or external state"
+
+  type: "presentation"
+  
+  location: "src/components/GistList.tsx"
+  
+  interface {
+    @ "Props interface"
+    public GistList(props: {
+      gists: Gist[],
+      onGistSelect?: (gist: Gist) -> void,
+      onGistView?: (gistId: string) -> void,
+      isLoading?: boolean,
+      className?: string,
+      viewMode?: "list" | "grid"
+    }) -> JSX.Element
+  }
+  
+  state {
+    @ "Minimal local state for UI interactions only"
+    private hoveredGistId: string?
+  }
+  
+  imports {
+    @ "React only"
+    allow "react" as external
+    
+    @ "UI libraries"
+    allow "@mui/material" as external
+    allow "lucide-react" as external
+    allow "clsx" as external
+    
+    @ "Type imports only"
+    allow "../types/gist.types" as types
+    
+    @ "UI-specific utilities only"
+    allow "../utils/format" as {formatDate}
+    
+    @ "CSS modules for styling"
+    allow "../styles/GistList.module.css" as styles
+    
+    @ "No stores, services, or data access"
+    deny imports ["../stores/*", "../services/*", "../data/*", "../hooks/*"]
+  }
+  
+  constraints {
+    @ "No side effects"
+    deny io.*
+    
+    @ "No async operations"
+    deny pattern.async_operations
+    
+    @ "Props validation"
+    require pattern.prop_types_or_typescript
+    
+    @ "Export restrictions"
+    deny exports ["_*"]
+    
+    @ "Keep it simple"
+    warn file.lines > 150
+    deny file.lines > 200
+    
+    @ "Performance"
+    require pattern.memo_if_expensive
+  }
+}

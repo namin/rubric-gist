@@ -1,0 +1,67 @@
+module GistSearch {
+  @ "Pure presentation component for gist search interface"
+  @ "Props-only, no stores or external state"
+
+  type: "presentation"
+  
+  location: "src/components/GistSearch.tsx"
+  
+  interface {
+    @ "Props interface"
+    public GistSearch(props: {
+      onSearch?: (query: string) -> void,
+      onUserSearch?: (username: string) -> void,
+      onFilterChange?: (filters: GistFilters) -> void,
+      isLoading?: boolean,
+      className?: string,
+      placeholder?: string
+    }) -> JSX.Element
+  }
+  
+  state {
+    @ "Minimal local state for UI interactions only"
+    private searchQuery: string
+    private username: string
+    private isAdvancedOpen: boolean
+  }
+  
+  imports {
+    @ "React only"
+    allow "react" as external
+    
+    @ "UI libraries"
+    allow "@mui/material" as external
+    allow "lucide-react" as external
+    allow "clsx" as external
+    
+    @ "Type imports only"
+    allow "../types/gist.types" as types
+    
+    @ "CSS modules for styling"
+    allow "../styles/GistSearch.module.css" as styles
+    
+    @ "No stores, services, or data access"
+    deny imports ["../stores/*", "../services/*", "../data/*", "../hooks/*"]
+  }
+  
+  constraints {
+    @ "No side effects"
+    deny io.*
+    
+    @ "No async operations"
+    deny pattern.async_operations
+    
+    @ "Props validation"
+    require pattern.prop_types_or_typescript
+    
+    @ "Export restrictions"
+    deny exports ["_*"]
+    
+    @ "Keep it simple"
+    warn file.lines > 150
+    deny file.lines > 200
+    
+    @ "Performance"
+    require pattern.memo_if_expensive
+  }
+}

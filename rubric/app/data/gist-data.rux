@@ -1,0 +1,60 @@
+module GistData {
+  @ "Direct API calls to GitHub Gist API"
+  @ "Returns raw data or throws raw errors"
+
+  type: "data"
+  
+  location: "src/data/gist-data.ts"
+  
+  interface {
+    @ "GitHub API endpoints"
+    public fetchPublicGists(params?: URLSearchParams) -> Promise<any>
+    public fetchGist(id: string) -> Promise<any>
+    public fetchUserGists(username: string, params?: URLSearchParams) -> Promise<any>
+  }
+  
+  state {
+    @ "API configuration"
+    private readonly API_BASE_URL: string
+    private readonly DEFAULT_HEADERS: Record<string, string>
+  }
+  
+  imports {
+    @ "Types only"
+    allow "../types/gist.types" as types
+    
+    @ "HTTP client library"
+    allow "../lib/http-client" as {httpClient}
+    
+    @ "Cannot import business logic layers"
+    deny imports ["../services/*", "../stores/*", "../components/*", "../hooks/*", "../utils/*"]
+  }
+  
+  constraints {
+    @ "Direct API/database calls only"
+    require io.network.fetch
+    allow io.network.* @ "API calls allowed"
+    
+    @ "No business logic or validation"
+    deny pattern.business_logic
+    deny pattern.validation
+    
+    @ "Returns raw data or throws raw errors"
+    require pattern.raw_data_return
+    deny pattern.error_transformation
+    
+    @ "No caching - services handle that"
+    deny pattern.caching
+    
+    @ "Single responsibility per module"
+    require pattern.single_responsibility
+    
+    @ "Export only data access functions"
+    require exports ["fetch*"]
+    deny exports ["_*", "API_*", "DEFAULT_*"]
+    
+    @ "Size constraints"
+    warn file.lines > 150
+    deny file.lines > 200
+  }
+}

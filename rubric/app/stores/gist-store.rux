@@ -1,0 +1,93 @@
+module GistStore {
+  @ "State management for GitHub Gist data"
+  @ "Coordinates between UI and gist services"
+
+  type: "store"
+  
+  location: "src/stores/gist-store.ts"
+  
+  interface {
+    @ "Zustand store hook"
+    public useGistStore() -> {
+      @ "State"
+      gists: Gist[],
+      selectedGist: Gist?,
+      isLoading: boolean,
+      error: string?,
+      filters: GistFilters,
+      
+      @ "Actions"
+      fetchPublicGists: () -> Promise<void>,
+      fetchGist: (id: string) -> Promise<void>,
+      searchUserGists: (username: string) -> Promise<void>,
+      
+      @ "UI state actions"
+      setSelectedGist: (gist: Gist?) -> void,
+      setFilters: (filters: GistFilters) -> void,
+      clearError: () -> void,
+      reset: () -> void
+    }
+  }
+  
+  state {
+    @ "Internal state shape"
+    private _gists: Gist[]
+    private _selectedGist: Gist?
+    private _isLoading: boolean
+    private _error: string?
+    private _filters: GistFilters
+    
+    @ "Optimistic update tracking"
+    private _optimisticUpdates: Map<string, Gist>
+  }
+  
+  imports {
+    @ "State management library"
+    allow "zustand" as external
+    allow "immer" as external
+    
+    @ "Service layer for business logic"
+    allow "../services/gist-service" as {gistService}
+    
+    @ "Types"
+    allow "../types/gist.types" as types
+    
+    @ "Error handling"
+    allow "../utils/errors" as {formatError}
+    
+    @ "Cannot import data layer directly"
+    deny imports ["../data/*"]
+    
+    @ "Cannot import components"
+    deny imports ["../components/*"]
+  }
+  
+  constraints {
+    @ "State management patterns"
+    require pattern.immutable_updates
+    require pattern.action_error_handling
+    
+    @ "No business logic - delegate to services"
+    deny pattern.complex_calculations
+    deny pattern.validation_logic
+    
+    @ "API calls only through services"
+    deny io.network.*
+    
+    @ "Storage through services"
+    deny io.localStorage.* @ "Use service layer for persistence"
+    
+    @ "DevTools support"
+    allow io.console.* when NODE_ENV="development"
+    
+    @ "Performance"
+    require pattern.selector_memoization
+    
+    @ "Export restrictions"
+    deny exports ["_*"]
+    
+    @ "Size constraints"
+    warn file.lines > 200
+    deny file.lines > 400
+  }
+}
