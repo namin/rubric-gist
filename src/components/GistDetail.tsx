@@ -3,7 +3,7 @@
  * Props-only, no stores or external state
  */
 
-import React, { memo, useState } from 'react';
+import { memo, useState } from 'react';
 import { X, Clock, Eye, EyeOff, FileText, Maximize2, Minimize2 } from 'lucide-react';
 import { Highlight, themes } from 'prism-react-renderer';
 import clsx from 'clsx';

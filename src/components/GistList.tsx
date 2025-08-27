@@ -3,7 +3,7 @@
  * Props-only, no stores or external state
  */
 
-import React, { memo } from 'react';
+import { memo, KeyboardEvent } from 'react';
 import { Clock, Eye, EyeOff } from 'lucide-react';
 import clsx from 'clsx';
 import type { Gist } from '../types/gist.types';
@@ -29,7 +29,7 @@ export const GistList = memo<GistListProps>(({
     onGistSelect?.(gist);
   };
 
-  const handleGistKeyDown = (event: React.KeyboardEvent, gist: Gist) => {
+  const handleGistKeyDown = (event: KeyboardEvent, gist: Gist) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       onGistSelect?.(gist);

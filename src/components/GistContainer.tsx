@@ -3,7 +3,7 @@
  * Manages UI state and coordinates child components
  */
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { List, Grid, X, AlertCircle } from 'lucide-react';
 import clsx from 'clsx';
 import { useGistStore } from '../stores/gist-store';
@@ -93,7 +93,6 @@ export default function GistContainer() {
           onUserSearch={handleUserSearch}
           onFilterChange={handleFilterChange}
           isLoading={isLoading}
-          placeholder="Search gists or enter username..."
         />
 
         {error && (

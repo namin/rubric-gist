@@ -3,7 +3,6 @@
  * Sets up the main application structure
  */
 
-import React from 'react';
 import GistContainer from './components/GistContainer';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import './styles/global.css';

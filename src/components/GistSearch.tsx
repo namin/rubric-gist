@@ -3,7 +3,7 @@
  * Props-only, no stores or external state
  */
 
-import React, { memo, useState } from 'react';
+import { memo, useState, FormEvent } from 'react';
 import { Search, ChevronDown, ChevronUp } from 'lucide-react';
 import clsx from 'clsx';
 import type { GistFilters } from '../types/gist.types';
@@ -15,7 +15,6 @@ interface GistSearchProps {
   onFilterChange?: (filters: GistFilters) => void;
   isLoading?: boolean;
   className?: string;
-  placeholder?: string;
 }
 
 export const GistSearch = memo<GistSearchProps>(({
@@ -24,13 +23,12 @@ export const GistSearch = memo<GistSearchProps>(({
   onFilterChange,
   isLoading = false,
   className,
-  placeholder = 'Search public gists...',
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [username, setUsername] = useState('');
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     
     if (username.trim()) {
